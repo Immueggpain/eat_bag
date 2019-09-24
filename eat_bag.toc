@@ -1,9 +1,7 @@
 ## Interface: 11302
-## Title: |cff5FC412Combuctor|r
-## Author: Tuller & Jaliborc (João Cardoso)
+## Title: 大背包
+## Author: Immueggpain
 ## Notes: Single window displays for your inventory and bank
-## OptionalDeps: BagBrother, WoWUnit
-## SavedVariables: Combuctor_Sets
-## Version: 8.2.7
-
-modules\main.xml
+## SavedVariables: 
+## Version: 1.0.0
+eat_bag.lua
