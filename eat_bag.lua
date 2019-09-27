@@ -26,6 +26,13 @@ ToggleAllBags = function ()
 end
 ]]
 
+
+local function sortCompare (a, b)
+	
+	
+	return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
+end
+
 local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndxMap)
 	local dstBagID = slotIndxMap[dstSlotIndx].bagID
 	local dstSlot = slotIndxMap[dstSlotIndx].slot
@@ -47,14 +54,14 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 		
 		if dstItemID==dstExpectItemID and dstItemCount==dstExpectCount then break end
 		
-		print(dstBagID, dstSlot, ':', '#'..curLoop, GetItemInfo(dstExpectItemID), ',', dstExpectCount, ':', dstItemID and GetItemInfo(dstItemID), ',', dstItemCount)
+		--print(dstBagID, dstSlot, ':', '#'..curLoop, GetItemInfo(dstExpectItemID), ',', dstExpectCount, ':', dstItemID and GetItemInfo(dstItemID), ',', dstItemCount)
 		
 		for srcSlotIndx = dstSlotIndx + 1, #slotIndxMap do
 			local srcBagID = slotIndxMap[srcSlotIndx].bagID
 			local srcSlot = slotIndxMap[srcSlotIndx].slot
 			local srcItemID = GetContainerItemID(srcBagID, srcSlot)
 			if srcItemID == dstExpectItemID then
-				print('move', srcBagID, ',', srcSlot, '->', dstBagID, ',', dstSlot)
+				--print('move', srcBagID, ',', srcSlot, '->', dstBagID, ',', dstSlot)
 				PickupContainerItem(srcBagID, srcSlot)
 				PickupContainerItem(dstBagID, dstSlot)
 				
@@ -115,9 +122,7 @@ local function sortBags()
 	for _, perItem in pairs(mergedItemMap) do
 		tinsert(mergedItemList, perItem)
 	end
-	sort(mergedItemList, function(a, b)
-		return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
-	end)
+	sort(mergedItemList, sortCompare)
 	
 	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
 	local expectSlotList = {}
@@ -148,10 +153,12 @@ local function sortBags()
 		fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
 	end
 	
+	--[[
 	for slotIndx,v in ipairs(expectSlotList) do
 		print(slotIndxMap[slotIndx].bagID, slotIndxMap[slotIndx].slot, v.itemName, v.count)
 	end
 	print('bang!')
+	]]
 end
 
 local sortBagsCO
