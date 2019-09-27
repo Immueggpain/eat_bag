@@ -167,8 +167,8 @@ local function sortBags()
 	end
 	
 	-- last we fix slot by slot, iterating expectSlotList
-	for slotIndx in ipairs(expectSlotList) do 
-		fixOneSlot(dstExpectItemID, dstExpectCount, slotIndx, slotIndxMap)
+	for slotIndx, expectSlotInfo in ipairs(expectSlotList) do 
+		fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
 	end
 	
 	for _,v in ipairs(expectSlotList) do
