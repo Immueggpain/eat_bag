@@ -82,10 +82,15 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 end
 
 local function sortBags()
+	-- first we scan bags, get all iteminfo, merge same items to get total. merge needs a map
+	-- then we sort items, sorting needs a list
+	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
+	-- then we add bag/slot info to expectSlotList
+	-- last we fix slot by slot, iterating expectSlotList
 	print('aha')
 	
-	-- scan bags
-	local bagItems={}
+	-- first we scan bags, get all iteminfo, merge same items to get total. merge needs a map, mergedItemMap.
+	local mergedItemMap={}
 	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		local slots = GetContainerNumSlots(container)
 		--if no container, slots is 0
@@ -94,11 +99,11 @@ local function sortBags()
 			if item_id ~= nil then
 				local texture, count, locked, quality, readable, lootable, link, isFiltered = GetContainerItemInfo(container, slot)
 				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(item_id)
-				local perItem = bagItems[item_id]
+				local perItem = mergedItemMap[item_id]
 				if perItem == nil then
 					perItem = {}
 					perItem.quantity = 0
-					bagItems[item_id] = perItem
+					mergedItemMap[item_id] = perItem
 				end
 				perItem.itemID = item_id
 				perItem.itemName = itemName
@@ -110,22 +115,35 @@ local function sortBags()
 		end
 	end
 	
-	local sortTable = {}
-	for _,perItem in pairs(bagItems) do
-		tinsert(sortTable, perItem)
+	-- then we sort items, sorting needs a list, mergedItemList.
+	local mergedItemList = {}
+	for _, perItem in pairs(mergedItemMap) do
+		tinsert(mergedItemList, perItem)
 	end
-	sort(sortTable, function(a, b)
+	sort(mergedItemList, function(a, b)
 		return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
 	end)
 	
-	-- map bagID,slot to continuous slot index
-	local slotIndxMap = {}
-	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-		local slots = GetContainerNumSlots(container)
+	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
+	local expectSlotList = {}
+	for i, perItem in ipairs(mergedItemList) do
+		local expectSlotInfo = {}
+		expectSlotInfo.itemID = perItem.itemID
+		
+		tinsert(expectSlotList, expectSlotInfo)
+	end
+	
+	-- then we rank and insert following slotIndx into slotIndxList
+	local slotIndxList = {}
+	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		local slots = GetContainerNumSlots(bagID)
 		for slot = 1, slots do
-			local tuple = {}
-			tuple.bagID = container
-			tuple.slot = slot
+			local expectInfo = {}
+			
+			expectInfo.bagID = bagID
+			expectInfo.slot = slot
+			expectInfo.itemID = 
+			
 			tinsert(slotIndxMap, tuple)
 		end
 	end
@@ -142,15 +160,8 @@ local function sortBags()
 	end
 	
 	-- moving items
-	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-		local slots = GetContainerNumSlots(container)
-		--if no container, slots is 0
-		for slot = 1, slots do
-			local item_id = GetContainerItemID(container, slot)
-			if item_id ~= nil then
-				moveAnItem(item_id, container, slot, bagItems, slotIndxMap)
-			end
-		end
+	for slotIndx in ipairs(slotIndxMap) do 
+		fixOneSlot(dstExpectItemID, dstExpectCount, slotIndx, slotIndxMap)
 	end
 	
 	for _,v in ipairs(sortTable) do
