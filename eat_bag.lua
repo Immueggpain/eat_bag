@@ -33,6 +33,17 @@ local function sortCompare (a, b)
 	return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
 end
 
+local num_to_bits={0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4}
+local function countSetBitsRec(num) 
+	local nibble = 0
+	if 0 == num then
+		return num_to_bits[0] 
+	end
+
+	nibble = num & 0xf
+	return num_to_bits[nibble] + countSetBitsRec(num >> 4)
+end
+
 local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndxMap)
 	local dstBagID = slotIndxMap[dstSlotIndx].bagID
 	local dstSlot = slotIndxMap[dstSlotIndx].slot
@@ -101,6 +112,7 @@ local function sortBags()
 			if item_id ~= nil then
 				local texture, count, locked, quality, readable, lootable, link, isFiltered = GetContainerItemInfo(container, slot)
 				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(item_id)
+				local bagType = GetItemFamily(item_id)
 				local perItem = mergedItemMap[item_id]
 				if perItem == nil then
 					perItem = {}
@@ -112,10 +124,65 @@ local function sortBags()
 				perItem.itemClassID = itemClassID
 				perItem.itemSubClassID = itemSubClassID
 				perItem.itemMaxStack = itemStackCount
+				perItem.bagType = bagType
 				perItem.quantity = perItem.quantity + count
 			end
 		end
 	end
+	
+	-- expand to unputItemList
+	local unputItemList = {}
+	for _, perItem in pairs(mergedItemMap) do
+		for j = 1, perItem.quantity, perItem.itemMaxStack do
+			local itemStack = {}
+			itemStack.itemID = perItem.itemID
+			itemStack.itemName = perItem.itemName
+			itemStack.itemClassID = perItem.itemClassID
+			itemStack.itemSubClassID = perItem.itemSubClassID
+			itemStack.bagType = perItem.bagType
+			itemStack.count = min(perItem.quantity-j+1, perItem.itemMaxStack)
+			tinsert(unputItemList, itemStack)
+		end
+	end
+	
+	-- create some bagTypeLists and a expectSlotList, share elements
+	local expectSlotList = {}
+	local bagTypeLists = {}
+	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		local slots = GetContainerNumSlots(bagID)
+		if slots > 0 then
+			local bagItemID = GetInventoryItemID("player", ContainerIDToInventoryID(bagID))
+			local bagType = GetItemFamily(bagItemID)
+			local bagTypeList = bagTypeLists[bagType]
+			if bagTypeList == nil then
+				bagTypeList = {}
+				bagTypeLists[bagType] = bagTypeList
+			end
+			
+			local slots = GetContainerNumSlots(bagID)
+			for slot = 1, slots do
+				local slotInfo = {}
+				slotInfo.bagID = bagID
+				slotInfo.slot = slot
+				tinsert(unputItemList, slotInfo)
+				tinsert(bagTypeList, slotInfo)
+			end
+		end
+	end
+	
+	-- foreach bagTypeList, pick out all compatible items from unputItemList, sort, put at most #bagTypeList items in bagTypeList, put rest back to unputItemList
+	local bagTypeOrder = {}
+	for bagType in pairs(bagTypeLists) do
+		tinsert(bagTypeOrder, bagType)
+	end
+	sort(bagTypeOrder, function(a,b)
+		local aBitCount = countSetBitsRec(a.bagType)
+		local bBitCount = countSetBitsRec(b.bagType)
+		return aBitCount < bBitCount or (aBitCount == bBitCount and a.bagType < b.bagType)
+	end)
+	
+	-- if unputItemList still has items, print error
+	-- follow same routine
 	
 	-- then we sort items, sorting needs a list, mergedItemList.
 	local mergedItemList = {}
