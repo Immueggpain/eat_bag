@@ -26,58 +26,11 @@ ToggleAllBags = function ()
 end
 ]]
 
-local function moveAnItem(srcItemID, srcBagID, srcSlot, bagItems, slotIndxMap)
-	print('move an', srcBagID, srcSlot)
-	local perItem = bagItems[srcItemID]
-	local dstBagID = perItem.bagID
-	local dstSlot = perItem.slot
-	local dstSlotIndx = perItem.slotIndx
-	print('dst base', dstBagID, dstSlot)
-	
-	-- loop is over when src stack is empty, or src stack is dst stack
-	while true do
-		if dstBagID == srcBagID and dstSlot == srcSlot then
-			-- do nothing, cuz src & dest is same slot, break
-			break
-		else
-			local destItemID = GetContainerItemID(dstBagID, dstSlot)
-			if srcItemID ~= destItemID then
-				-- swap, cuz src dest are different items, break
-				print('swap', srcBagID, ',', srcSlot, '->', dstBagID, ',', dstSlot)
-				PickupContainerItem(srcBagID, srcSlot)
-				PickupContainerItem(dstBagID, dstSlot)
-				break
-			else
-				-- same itemID
-				local _, srcCount = GetContainerItemInfo(srcBagID, srcSlot)
-				local _, dstCount = GetContainerItemInfo(dstBagID, dstSlot)
-				if dstCount == perItem.itemMaxStack then
-					-- do nothing, cuz dest stack is full, continue
-				else
-					-- fill dest stack, but there may be leftover, may need continue
-					print('fill', srcBagID, ',', srcSlot, '->', dstBagID, ',', dstSlot)
-					PickupContainerItem(srcBagID, srcSlot)
-					PickupContainerItem(dstBagID, dstSlot)
-					if srcCount+dstCount > perItem.itemMaxStack then
-						-- do nothing, continue
-					else
-						-- no leftover, break
-						break
-					end
-				end
-			end
-		end
-		dstSlotIndx = dstSlotIndx+1
-		dstBagID = slotIndxMap[dstSlotIndx].bagID
-		dstSlot = slotIndxMap[dstSlotIndx].slot
-	end
-end
-
 local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndxMap)
 	local dstBagID = slotIndxMap[dstSlotIndx].bagID
 	local dstSlot = slotIndxMap[dstSlotIndx].slot
 	
-	local maxLoop = 5
+	local maxLoop = 10
 	local curLoop = 1
 	while curLoop <= maxLoop do
 		-- first wait for unlock
@@ -92,9 +45,9 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 		
 		local _, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
 		
-		print(curLoop, ':', dstBagID, dstSlot, ':', dstExpectItemID, ',', dstExpectCount, ':', dstItemID, ',', dstItemCount)
-		
 		if dstItemID==dstExpectItemID and dstItemCount==dstExpectCount then break end
+		
+		print(dstBagID, dstSlot, ':', '#'..curLoop, GetItemInfo(dstExpectItemID), ',', dstExpectCount, ':', dstItemID and GetItemInfo(dstItemID), ',', dstItemCount)
 		
 		for srcSlotIndx = dstSlotIndx + 1, #slotIndxMap do
 			local srcBagID = slotIndxMap[srcSlotIndx].bagID
@@ -104,6 +57,18 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 				print('move', srcBagID, ',', srcSlot, '->', dstBagID, ',', dstSlot)
 				PickupContainerItem(srcBagID, srcSlot)
 				PickupContainerItem(dstBagID, dstSlot)
+				
+				-- everytime we move, we must check lock, cuz at next loop, we always check if dst slot is ok
+				while true do
+					local _, _, srcLocked, _, _, _, _, _, _, _ = GetContainerItemInfo(srcBagID, srcSlot)
+					local _, _, dstLocked, _, _, _, _, _, _, _ = GetContainerItemInfo(dstBagID, dstSlot)
+					if srcLocked or dstLocked then 
+						coroutine.yield()
+					else
+						break
+					end
+				end
+				
 				break
 			end
 		end
@@ -189,16 +154,33 @@ local function sortBags()
 	print('bang!')
 end
 
+local sortBagsCO
+
+local function sortBagsStart()
+	sortBagsCO = coroutine.create(sortBags)
+end
+
+local function onUpdate()
+	if sortBagsCO ~= nil then
+		local canResume, errMsg = coroutine.resume(sortBagsCO)
+		if canResume == false then
+			sortBagsCO = nil
+			print(errMsg)
+		end
+	end
+end
+
 --create a frame for receiving events
 CreateFrame("FRAME", "eat_bag_event_frame");
 eat_bag_event_frame:RegisterEvent("MERCHANT_SHOW");
 --cas_frame:RegisterEvent("BAG_UPDATE");
 --cas_frame:RegisterEvent("BAG_UPDATE_DELAYED");
 --cas_frame:RegisterEvent("ITEM_PUSH");
-eat_bag_event_frame:SetScript("OnEvent", onEvent);
+--eat_bag_event_frame:SetScript("OnEvent", onEvent);
+eat_bag_event_frame:SetScript("OnUpdate", onUpdate);
 
 --create slash command
-SlashCmdList['eat_bag_sort'] = sortBags
+SlashCmdList['eat_bag_sort'] = sortBagsStart
 SLASH_eat_bag_sort1 = '/sort'
 SLASH_eat_bag_sort2 = '/sortbag'
 SLASH_eat_bag_sort3 = '/sb'
