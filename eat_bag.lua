@@ -82,7 +82,7 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 	while curLoop <= maxLoop do
 		_, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
 		
-		print(curLoop, ':', dstBagID,dstSlot,':' dstExpectItemID, ',', dstExpectCount, ':', dstItemID, ',', dstItemCount)
+		print(curLoop, ':', dstBagID, dstSlot, ':', dstExpectItemID, ',', dstExpectCount, ':', dstItemID, ',', dstItemCount)
 		
 		if dstItemID==dstExpectItemID and dstItemCount==dstExpectCount then break end
 		
