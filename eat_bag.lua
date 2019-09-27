@@ -77,10 +77,23 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 	local dstBagID = slotIndxMap[dstSlotIndx].bagID
 	local dstSlot = slotIndxMap[dstSlotIndx].slot
 	
-	while true do
+	local maxLoop=100
+	local curLoop=1
+	while curLoop<=maxLoop do
 		_, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
 		if dstItemID==dstExpectItemID and dstItemCount==dstExpectCount then break end
 		
+		for srcSlotIndx = dstSlotIndx + 1, #slotIndxMap do
+			local srcBagID = slotIndxMap[dstSlotIndx].bagID
+			local srcSlot = slotIndxMap[dstSlotIndx].slot
+			local srcItemID = GetContainerItemID(srcBagID, srcSlot)
+			if srcSlot == dstExpectItemID then
+				PickupContainerItem(srcBagID, srcSlot)
+				PickupContainerItem(dstBagID, dstSlot)
+				break
+			end
+		end
+		curLoop = curLoop + 1
 	end
 end
 
