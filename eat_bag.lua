@@ -150,7 +150,9 @@ local function sortBags()
 	
 	-- last we fix slot by slot, iterating expectSlotList
 	for slotIndx, expectSlotInfo in ipairs(expectSlotList) do 
-		fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
+		if expectSlotInfo.itemID ~= nil then
+			fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
+		end
 	end
 	
 	--[[
