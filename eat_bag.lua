@@ -127,45 +127,35 @@ local function sortBags()
 	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
 	local expectSlotList = {}
 	for i, perItem in ipairs(mergedItemList) do
-		local expectSlotInfo = {}
-		expectSlotInfo.itemID = perItem.itemID
-		
-		tinsert(expectSlotList, expectSlotInfo)
-	end
-	
-	-- then we rank and insert following slotIndx into slotIndxList
-	local slotIndxList = {}
-	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-		local slots = GetContainerNumSlots(bagID)
-		for slot = 1, slots do
-			local expectInfo = {}
-			
-			expectInfo.bagID = bagID
-			expectInfo.slot = slot
-			expectInfo.itemID = 
-			
-			tinsert(slotIndxMap, tuple)
+		for j = 1, perItem.quantity, itemMaxStack do
+			local expectSlotInfo = {}
+			expectSlotInfo.itemID = perItem.itemID
+			expectSlotInfo.itemName = perItem.itemName
+			expectSlotInfo.count = min(perItem.quantity-j+1, itemMaxStack)
+			tinsert(expectSlotList, expectSlotInfo)
 		end
 	end
 	
-	-- now we have order of itemIDs, map it to actual slots
+	-- then we add bag/slot info to expectSlotList
 	local slotIndx = 1
-	for i,perItem in ipairs(sortTable) do
-		perItem.slotIndx = slotIndx
-		perItem.stacks = ceil(perItem.quantity/perItem.itemMaxStack)
-		perItem.leftover = math.fmod(perItem.quantity,perItem.itemMaxStack)
-		perItem.bagID = slotIndxMap[slotIndx].bagID
-		perItem.slot = slotIndxMap[slotIndx].slot
-		slotIndx = slotIndx + perItem.stacks
+	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		local slots = GetContainerNumSlots(bagID)
+		for slot = 1, slots do
+			local expectSlotInfo = expectSlotList[slotIndx]
+			if expectSlotInfo == nil then break end
+			expectSlotInfo.bagID = bagID
+			expectSlotInfo.slot = slot
+			slotIndx = slotIndx + 1
+		end
 	end
 	
-	-- moving items
-	for slotIndx in ipairs(slotIndxMap) do 
-		fixOneSlot(dstExpectItemID, dstExpectCount, slotIndx, slotIndxMap)
+	-- last we fix slot by slot, iterating expectSlotList
+	for slotIndx in ipairs(expectSlotInfo) do 
+		--fixOneSlot(dstExpectItemID, dstExpectCount, slotIndx, expectSlotInfo)
 	end
 	
-	for _,v in ipairs(sortTable) do
-		print(v.bagID, v.slot, v.itemName, v.stacks)
+	for _,v in ipairs(expectSlotList) do
+		print(v.bagID, v.slot, v.itemName, v.count)
 	end
 	print('bang!')
 end
