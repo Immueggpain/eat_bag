@@ -152,21 +152,6 @@ local function sortBags()
 		end
 	end
 	
-	--[[
-	-- then we add bag/slot info to expectSlotList
-	local slotIndx = 1
-	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-		local slots = GetContainerNumSlots(bagID)
-		for slot = 1, slots do
-			local expectSlotInfo = expectSlotList[slotIndx]
-			if expectSlotInfo == nil then break end
-			expectSlotInfo.bagID = bagID
-			expectSlotInfo.slot = slot
-			slotIndx = slotIndx + 1
-		end
-	end
-	]]
-	
 	-- then we build a slotIndxMap, mapping bagID/slot to slotIndx, cuz we need it when iterating through unfixed slots when fixing one slot.
 	local slotIndxMap = {}
 	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
