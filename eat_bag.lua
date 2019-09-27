@@ -80,7 +80,17 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 	local maxLoop = 5
 	local curLoop = 1
 	while curLoop <= maxLoop do
-		_, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
+		-- first wait for unlock
+		while true do
+			local _, _, dstLocked, _, _, _, _, _, _, _ = GetContainerItemInfo(dstBagID, dstSlot)
+			if dstLocked then 
+				coroutine.yield()
+			else
+				break
+			end
+		end
+		
+		local _, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
 		
 		print(curLoop, ':', dstBagID, dstSlot, ':', dstExpectItemID, ',', dstExpectCount, ':', dstItemID, ',', dstItemCount)
 		
@@ -91,6 +101,7 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 			local srcSlot = slotIndxMap[srcSlotIndx].slot
 			local srcItemID = GetContainerItemID(srcBagID, srcSlot)
 			if srcItemID == dstExpectItemID then
+				print('move', srcBagID, ',', srcSlot, '->', dstBagID, ',', dstSlot)
 				PickupContainerItem(srcBagID, srcSlot)
 				PickupContainerItem(dstBagID, dstSlot)
 				break
