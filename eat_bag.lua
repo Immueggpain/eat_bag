@@ -77,10 +77,13 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 	local dstBagID = slotIndxMap[dstSlotIndx].bagID
 	local dstSlot = slotIndxMap[dstSlotIndx].slot
 	
-	local maxLoop=100
-	local curLoop=1
-	while curLoop<=maxLoop do
+	local maxLoop = 10
+	local curLoop = 1
+	while curLoop <= maxLoop do
 		_, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
+		
+		print(curLoop, ':', dstBagID,dstSlot,':' dstExpectItemID, ',', dstExpectCount, ':', dstItemID, ',', dstItemCount)
+		
 		if dstItemID==dstExpectItemID and dstItemCount==dstExpectCount then break end
 		
 		for srcSlotIndx = dstSlotIndx + 1, #slotIndxMap do
