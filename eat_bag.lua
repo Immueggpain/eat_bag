@@ -184,8 +184,8 @@ local function sortBags()
 		fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
 	end
 	
-	for _,v in ipairs(expectSlotList) do
-		print(v.bagID, v.slot, v.itemName, v.count)
+	for slotIndx,v in ipairs(expectSlotList) do
+		print(slotIndxMap[slotIndx].bagID, slotIndxMap[slotIndx].slot, v.itemName, v.count)
 	end
 	print('bang!')
 end
