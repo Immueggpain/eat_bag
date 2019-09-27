@@ -73,6 +73,14 @@ local function moveAnItem(srcItemID, srcBagID, srcSlot, bagItems, slotIndxMap)
 	end
 end
 
+local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndxMap)
+	local dstBagID = slotIndxMap[dstSlotIndx].bagID
+	local dstSlot = slotIndxMap[dstSlotIndx].slot
+	
+	while _, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot); dstItemID~=dstExpectItemID or dstItemCount~=dstExpectCount do
+	end
+end
+
 local function sortBags()
 	print('aha')
 	
