@@ -77,7 +77,10 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 	local dstBagID = slotIndxMap[dstSlotIndx].bagID
 	local dstSlot = slotIndxMap[dstSlotIndx].slot
 	
-	while _, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot); dstItemID~=dstExpectItemID or dstItemCount~=dstExpectCount do
+	while true do
+		_, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstBagID, dstSlot)
+		if dstItemID==dstExpectItemID and dstItemCount==dstExpectCount then break end
+		
 	end
 end
 
@@ -85,7 +88,7 @@ local function sortBags()
 	-- first we scan bags, get all iteminfo, merge same items to get total. merge needs a map
 	-- then we sort items, sorting needs a list
 	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
-	-- then we add bag/slot info to expectSlotList
+	-- then we build a slotIndxMap, mapping bagID/slot to slotIndx, cuz we need it when iterating through unfixed slots when fixing one slot.
 	-- last we fix slot by slot, iterating expectSlotList
 	print('aha')
 	
@@ -127,15 +130,16 @@ local function sortBags()
 	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
 	local expectSlotList = {}
 	for i, perItem in ipairs(mergedItemList) do
-		for j = 1, perItem.quantity, itemMaxStack do
+		for j = 1, perItem.quantity, perItem.itemMaxStack do
 			local expectSlotInfo = {}
 			expectSlotInfo.itemID = perItem.itemID
 			expectSlotInfo.itemName = perItem.itemName
-			expectSlotInfo.count = min(perItem.quantity-j+1, itemMaxStack)
+			expectSlotInfo.count = min(perItem.quantity-j+1, perItem.itemMaxStack)
 			tinsert(expectSlotList, expectSlotInfo)
 		end
 	end
 	
+	--[[
 	-- then we add bag/slot info to expectSlotList
 	local slotIndx = 1
 	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
@@ -148,10 +152,23 @@ local function sortBags()
 			slotIndx = slotIndx + 1
 		end
 	end
+	]]
+	
+	-- then we build a slotIndxMap, mapping bagID/slot to slotIndx, cuz we need it when iterating through unfixed slots when fixing one slot.
+	local slotIndxMap = {}
+	for bagID = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		local slots = GetContainerNumSlots(bagID)
+		for slot = 1, slots do
+			local bagSlot = {}
+			bagSlot.bagID = bagID
+			bagSlot.slot = slot
+			tinsert(slotIndxMap, bagSlot)
+		end
+	end
 	
 	-- last we fix slot by slot, iterating expectSlotList
-	for slotIndx in ipairs(expectSlotInfo) do 
-		--fixOneSlot(dstExpectItemID, dstExpectCount, slotIndx, expectSlotInfo)
+	for slotIndx in ipairs(expectSlotList) do 
+		fixOneSlot(dstExpectItemID, dstExpectCount, slotIndx, slotIndxMap)
 	end
 	
 	for _,v in ipairs(expectSlotList) do
