@@ -164,7 +164,7 @@ local function sortBags()
 				local slotInfo = {}
 				slotInfo.bagID = bagID
 				slotInfo.slot = slot
-				tinsert(unputItemList, slotInfo)
+				tinsert(expectSlotList, slotInfo)
 				tinsert(bagTypeList, slotInfo)
 			end
 		end
@@ -180,6 +180,16 @@ local function sortBags()
 		local bBitCount = countSetBitsRec(b.bagType)
 		return aBitCount < bBitCount or (aBitCount == bBitCount and a.bagType < b.bagType)
 	end)
+	for i, bagType in ipairs(bagTypeOrder) do
+		print(i, bagType)
+		local bagTypeList = bagTypeLists[bagType]
+		local unputBagTypeList = {}
+		for j, itemStack in ipairs(unputItemList) do
+			--???if itemStack.bagType bit& bagType then itemStack.put=true; tinsert end
+			tinsert(unputBagTypeList, itemStack)
+		end
+	end
+	
 	
 	-- if unputItemList still has items, print error
 	-- follow same routine
