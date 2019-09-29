@@ -40,8 +40,8 @@ local function countSetBitsRec(num)
 		return num_to_bits[0] 
 	end
 
-	nibble = num & 0xf
-	return num_to_bits[nibble] + countSetBitsRec(num >> 4)
+	nibble = bit.band(num, 0xf)
+	return num_to_bits[nibble] + countSetBitsRec(bit.rshift(num, 4))
 end
 
 local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndxMap)
