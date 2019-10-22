@@ -95,11 +95,7 @@ local function fixOneSlot(dstExpectItemID, dstExpectCount, dstSlotIndx, slotIndx
 end
 
 local function sortBags()
-	-- first we scan bags, get all iteminfo, merge same items to get total. merge needs a map
-	-- then we sort items, sorting needs a list
-	-- then we expand the list to real slots, produce a expectSlotList with slotIndx
-	-- then we build a slotIndxMap, mapping bagID/slot to slotIndx, cuz we need it when iterating through unfixed slots when fixing one slot.
-	-- last we fix slot by slot, iterating expectSlotList
+	-- 1. scan bags, create mergedItemMap 
 	print('aha')
 	
 	-- first we scan bags, get all iteminfo, merge same items to get total. merge needs a map, mergedItemMap.
