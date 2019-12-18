@@ -1,7 +1,7 @@
-## Interface: 11302
+## Interface: 11303
 ## Title: 大背包
 ## Author: Immueggpain
 ## Notes: Single window displays for your inventory and bank
 ## SavedVariables: 
-## Version: 1.0.0
+## Version: 1.0.1
 eat_bag.lua
