@@ -1,7 +1,7 @@
 ## Interface: 11303
-## Title: 大背包
+## Title: sortbag
 ## Author: Immueggpain
-## Notes: Single window displays for your inventory and bank
+## Notes: sort your bags
 ## SavedVariables: 
 ## Version: 1.0.1
 eat_bag.lua
