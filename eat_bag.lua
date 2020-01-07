@@ -1,35 +1,4 @@
-CreateFrame("FRAME", "eat_bag_frame", UIParent, "ContainerFrameTemplate")
-
---[[
-ToggleAllBags = function ()
-	if ( not UIParent:IsShown() ) then
-		return;
-	end
-
-	if ( not CanOpenPanels() ) then
-		if ( UnitIsDead("player") ) then
-			NotWhileDeadError();
-		end
-		return;
-	end
-	
-	local size = 0
-	for id= BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-		size = size + GetContainerNumSlots(id)
-	end
-
-	local containerShowing;
-	local containerFrame;
-	if ( not containerShowing ) then
-		eat_bag_frame：Show()
-	end
-end
-]]
-
-
 local function sortCompare (a, b)
-	
-	
 	return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
 end
 
@@ -252,6 +221,7 @@ local function onUpdate()
 	end
 end
 
+CreateFrame("FRAME", "eat_bag_frame", UIParent, "ContainerFrameTemplate")
 --create a frame for receiving events
 CreateFrame("FRAME", "eat_bag_event_frame");
 eat_bag_event_frame:RegisterEvent("MERCHANT_SHOW");
