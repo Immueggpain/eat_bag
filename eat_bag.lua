@@ -392,6 +392,10 @@ local function sortBanksStart()
 	sortBagsCO = coroutine.create(function () sortBagsEasy(true) end)
 end
 
+local function sortBothStart()
+	sortBagsCO = coroutine.create(function () sortBagsEasy(false) sortBagsEasy(true) end)
+end
+
 local function onUpdate()
 	if sortBagsCO ~= nil then
 		local canResume, errMsg = coroutine.resume(sortBagsCO)
@@ -420,3 +424,6 @@ SLASH_eat_bag_sort3 = '/sb'
 
 SlashCmdList['eat_bag_sortbank'] = sortBanksStart
 SLASH_eat_bag_sortbank1 = '/sk'
+
+SlashCmdList['eat_bag_sortboth'] = sortBothStart
+SLASH_eat_bag_sortboth1 = '/so'
