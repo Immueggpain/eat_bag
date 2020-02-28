@@ -222,14 +222,18 @@ local function itemPriority (a)
 	if a.itemClassID == 2 then return 3 end
 	--护甲
 	if a.itemClassID == 4 then return 4 end
+	--配方
+	if a.itemClassID == 9 then return 5 end
 	--施法材料
-	if a.itemClassID == 5 then return 5 end
+	if a.itemClassID == 5 then return 6 end
 	--商品（商业技能）
-	if a.itemClassID == 7 then return 6 end
+	if a.itemClassID == 7 then return 7 end
 	--消耗品
-	if a.itemClassID == 0 then return 7 end
+	if a.itemClassID == 0 then return 8 end
+	--钥匙
+	if a.itemClassID == 13 then return 9 end
 	--任务
-	if a.itemClassID == 12 then return 8 end
+	if a.itemClassID == 12 then return 10 end
 	
 	return 100
 end
@@ -246,12 +250,17 @@ local function compareItemStack (a, b)
 	end
 end
 
-local function sortBagsEasy()
+local function sortBagsEasy(bank)
 	print('======begin sort=====')
+	
+	local bank_containers = {-1, 5, 6, 7, 8, 9, 10}
+	local character_containers = {0, 1, 2, 3, 4}
+	local containers
+	if bank then containers = bank_containers else containers = character_containers end
 	
 	--get all items into a dict
 	local allItems = {}
-	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+	for _, container in ipairs(containers) do
 		local slots = GetContainerNumSlots(container)
 		--if no container, slots is 0
 		for slot = 1, slots do
@@ -311,7 +320,7 @@ local function sortBagsEasy()
 	-- allSlots is the final expected result, with empty slots
 	local allSlots = {}
 	local index = 1
-	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+	for _, container in ipairs(containers) do
 		local slots = GetContainerNumSlots(container)
 		--if no container, slots is 0
 		for slot = 1, slots do
@@ -376,7 +385,11 @@ end
 local sortBagsCO
 
 local function sortBagsStart()
-	sortBagsCO = coroutine.create(sortBagsEasy)
+	sortBagsCO = coroutine.create(function () sortBagsEasy(false) end)
+end
+
+local function sortBanksStart()
+	sortBagsCO = coroutine.create(function () sortBagsEasy(true) end)
 end
 
 local function onUpdate()
@@ -404,3 +417,6 @@ SlashCmdList['eat_bag_sort'] = sortBagsStart
 SLASH_eat_bag_sort1 = '/sort'
 SLASH_eat_bag_sort2 = '/sortbag'
 SLASH_eat_bag_sort3 = '/sb'
+
+SlashCmdList['eat_bag_sortbank'] = sortBanksStart
+SLASH_eat_bag_sortbank1 = '/sk'
