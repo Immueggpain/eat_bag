@@ -1,7 +1,7 @@
 ## Interface: 11303
-## Title: sortbag
-## Author: Immueggpain
-## Notes: sort your bags
+## Title: 整理背包
+## Author: 睡吧狗命要紧
+## Notes: 整理背包哟，诶嘿嘿 @睡吧狗命要紧
 ## SavedVariables: 
 ## Version: 1.0.1
 eat_bag.lua
