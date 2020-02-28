@@ -205,10 +205,63 @@ local function sortBags()
 	]]
 end
 
+
+
+
+
+-----------------------------------------------
+
+
+
+
+
+
+local function sortBagsEasy()
+	print('======begin sort=====')
+	
+	--get all items into a dict
+	local allItems = {}
+	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		local slots = GetContainerNumSlots(container)
+		--if no container, slots is 0
+		for slot = 1, slots do
+			local item_id = GetContainerItemID(container, slot)
+			if item_id ~= nil then
+				local texture, count, locked, quality, readable, lootable, link, isFiltered = GetContainerItemInfo(container, slot)
+				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(item_id)
+				local bagType = GetItemFamily(item_id)
+				local perItem = allItems[item_id]
+				if perItem == nil then
+					perItem = {}
+					perItem.quantity = 0
+					allItems[item_id] = perItem
+				end
+				perItem.itemID = item_id
+				perItem.itemName = itemName
+				perItem.itemClassID = itemClassID
+				perItem.itemSubClassID = itemSubClassID
+				perItem.itemMaxStack = itemStackCount
+				perItem.itemBagType = bagType
+				perItem.quantity = perItem.quantity + count
+			end
+		end
+	end
+	
+	--[[
+	for _, perItem in pairs(allItems) do
+		print(string.format("%s %d", perItem.itemName, perItem.quantity))
+	end
+	]]
+	
+	
+	
+	print('======end sort=====')
+end
+
 local sortBagsCO
 
 local function sortBagsStart()
-	sortBagsCO = coroutine.create(sortBags)
+	sortBagsCO = coroutine.create(sortBagsEasy)
 end
 
 local function onUpdate()
@@ -221,7 +274,7 @@ local function onUpdate()
 	end
 end
 
-CreateFrame("FRAME", "eat_bag_frame", UIParent, "ContainerFrameTemplate")
+--CreateFrame("FRAME", "eat_bag_frame", UIParent, "ContainerFrameTemplate")
 --create a frame for receiving events
 CreateFrame("FRAME", "eat_bag_event_frame");
 eat_bag_event_frame:RegisterEvent("MERCHANT_SHOW");
