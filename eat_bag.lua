@@ -212,7 +212,10 @@ end
 -----------------------------------------------
 
 
-
+local function compareItemStack (a, b)
+	return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
+		or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID == b.itemID and a.count > b.count)
+end
 
 
 
@@ -253,7 +256,46 @@ local function sortBagsEasy()
 	end
 	]]
 	
+	--allItemStacks is an array, each stack is at max itemMaxStack
+	local allItemStacks = {}
+	for _, perItem in pairs(allItems) do
+		for j = 1, perItem.quantity, perItem.itemMaxStack do
+			local itemStack = {}
+			itemStack.itemID = perItem.itemID
+			itemStack.itemName = perItem.itemName
+			itemStack.itemClassID = perItem.itemClassID
+			itemStack.itemSubClassID = perItem.itemSubClassID
+			itemStack.itemMaxStack = perItem.itemMaxStack
+			itemStack.itemBagType = perItem.itemBagType
+			itemStack.count = min(perItem.quantity-j+1, perItem.itemMaxStack)
+			tinsert(allItemStacks, itemStack)
+		end
+	end
 	
+	-- sort
+	sort(allItemStacks, compareItemStack)
+	
+	for i, itemStack in ipairs(allItemStacks) do
+		print(string.format("%d %s %d", i, itemStack.itemName, itemStack.count))
+	end
+	
+	-- allSlots is the final expected result
+	local allSlots = {}
+	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		local slots = GetContainerNumSlots(container)
+		--if no container, slots is 0
+		for slot = 1, slots do
+			local perSlot = {}
+			tinsert(allSlots, perSlot)
+		end
+	end
+	
+	-- last we fix slot by slot, iterating expectSlotList
+	for slotIndx, expectSlotInfo in ipairs(expectSlotList) do 
+		if expectSlotInfo.itemID ~= nil then
+			fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
+		end
+	end
 	
 	print('======end sort=====')
 end
