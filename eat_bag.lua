@@ -275,25 +275,71 @@ local function sortBagsEasy()
 	-- sort
 	sort(allItemStacks, compareItemStack)
 	
+	--[[
 	for i, itemStack in ipairs(allItemStacks) do
 		print(string.format("%d %s %d", i, itemStack.itemName, itemStack.count))
 	end
+	]]
 	
 	-- allSlots is the final expected result
 	local allSlots = {}
+	local index = 1
 	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		local slots = GetContainerNumSlots(container)
 		--if no container, slots is 0
 		for slot = 1, slots do
-			local perSlot = {}
+			local perSlot = allItemStacks[index]
+			if perSlot == nil then perSlot = {} end
+			perSlot.container = container
+			perSlot.slot = slot
+			perSlot.fixed = false
 			tinsert(allSlots, perSlot)
+			index = index+1
 		end
 	end
 	
-	-- last we fix slot by slot, iterating expectSlotList
-	for slotIndx, expectSlotInfo in ipairs(expectSlotList) do 
-		if expectSlotInfo.itemID ~= nil then
-			fixOneSlot(expectSlotInfo.itemID, expectSlotInfo.count, slotIndx, slotIndxMap)
+	--[[
+	for i, perSlot in ipairs(allSlots) do
+		print(string.format("%d %d %d %s %d", i, perSlot.container, perSlot.slot, perSlot.itemName or 'empty', perSlot.count))
+	end
+	]]
+	
+	for i, dstSlot in ipairs(allSlots) do
+		local _, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstSlot.container, dstSlot.slot)
+		dstSlot.fixed = true
+		if dstItemID == dstSlot.itemID and dstItemCount == dstSlot.count then
+			-- is ok
+		else
+			-- need fix, find src
+			for j, srcSlot in ipairs(allSlots) do
+				if srcSlot.fixed then
+					-- fixed
+				else
+					-- not fixed
+					local _, srcItemCount, _, _, _, _, _, _, _, srcItemID = GetContainerItemInfo(srcSlot.container, srcSlot.slot)
+					if srcItemID == dstSlot.itemID then
+						-- is what we need, move
+						PickupContainerItem(srcSlot.container, srcSlot.slot)
+						PickupContainerItem(dstSlot.container, dstSlot.slot)
+						print('move', srcSlot.container, ',', srcSlot.slot, '->', dstSlot.container, ',', dstSlot.slot)
+						-- everytime we move, we must check lock
+						while true do
+							local _, _, srcLocked, _, _, _, _, _, _, _ = GetContainerItemInfo(srcSlot.container, srcSlot.slot)
+							local _, _, dstLocked, _, _, _, _, _, _, _ = GetContainerItemInfo(dstSlot.container, dstSlot.slot)
+							if srcLocked or dstLocked then 
+								coroutine.yield()
+							else
+								break
+							end
+						end
+						-- if dst is ok, break
+						_, dstItemCount, _, _, _, _, _, _, _, dstItemID = GetContainerItemInfo(dstSlot.container, dstSlot.slot)
+						if dstItemID == dstSlot.itemID and dstItemCount == dstSlot.count then
+							break
+						end
+					end
+				end
+			end
 		end
 	end
 	
