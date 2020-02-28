@@ -211,9 +211,39 @@ end
 
 ----------------------NEW CODE-------------------------
 
+local function itemPriority (a)
+	--hearthstone
+	if a.itemID == 6948 then return 0 end
+	--杂项
+	if a.itemClassID == 15 then return 1 end
+	--容器
+	if a.itemClassID == 1 then return 2 end
+	--武器
+	if a.itemClassID == 2 then return 3 end
+	--护甲
+	if a.itemClassID == 4 then return 4 end
+	--施法材料
+	if a.itemClassID == 5 then return 5 end
+	--商品（商业技能）
+	if a.itemClassID == 7 then return 6 end
+	--消耗品
+	if a.itemClassID == 0 then return 7 end
+	--任务
+	if a.itemClassID == 12 then return 8 end
+	
+	return 100
+end
+
 local function compareItemStack (a, b)
-	return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
-		or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID == b.itemID and a.count > b.count)
+	-- return true if a is before b (a<b)
+	if itemPriority(a) < itemPriority(b) then
+		return true
+	elseif itemPriority(a) > itemPriority(b) then
+		return false
+	else
+		return a.itemClassID > b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
+			or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID == b.itemID and a.count > b.count)
+	end
 end
 
 local function sortBagsEasy()
@@ -272,11 +302,11 @@ local function sortBagsEasy()
 	-- sort
 	sort(allItemStacks, compareItemStack)
 	
-	
+	--[[
 	for i, itemStack in ipairs(allItemStacks) do
-		print(string.format("%d %s(%d,%d) %d", i, itemStack.itemName, itemStack.itemClassID, itemStack.itemSubClassID, itemStack.quantity))
+		print(string.format("%d %d%s(%d,%d) %d", i, itemStack.itemID, itemStack.itemName, itemStack.itemClassID, itemStack.itemSubClassID, itemStack.quantity))
 	end
-	
+	]]
 	
 	-- allSlots is the final expected result, with empty slots
 	local allSlots = {}
@@ -318,7 +348,7 @@ local function sortBagsEasy()
 						-- is what we need, move
 						PickupContainerItem(srcSlot.container, srcSlot.slot)
 						PickupContainerItem(dstSlot.container, dstSlot.slot)
-						print('move', srcSlot.container, ',', srcSlot.slot, '->', dstSlot.container, ',', dstSlot.slot)
+						--print('move', srcSlot.container, ',', srcSlot.slot, '->', dstSlot.container, ',', dstSlot.slot)
 						-- everytime we move, we must check lock
 						while true do
 							local _, _, srcLocked, _, _, _, _, _, _, _ = GetContainerItemInfo(srcSlot.container, srcSlot.slot)
