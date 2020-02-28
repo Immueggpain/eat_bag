@@ -209,15 +209,12 @@ end
 
 
 
------------------------------------------------
-
+----------------------NEW CODE-------------------------
 
 local function compareItemStack (a, b)
 	return a.itemClassID < b.itemClassID or (a.itemClassID == b.itemClassID and a.itemSubClassID < b.itemSubClassID) or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID < b.itemID)
 		or (a.itemClassID == b.itemClassID and a.itemSubClassID == b.itemSubClassID and a.itemID == b.itemID and a.count > b.count)
 end
-
-
 
 local function sortBagsEasy()
 	print('======begin sort=====')
@@ -252,7 +249,7 @@ local function sortBagsEasy()
 	
 	--[[
 	for _, perItem in pairs(allItems) do
-		print(string.format("%s %d", perItem.itemName, perItem.quantity))
+		print(string.format("%s(%d,%d) %d", perItem.itemName, perItem.itemClassID, perItem.itemSubClassID, perItem.quantity))
 	end
 	]]
 	
@@ -275,13 +272,13 @@ local function sortBagsEasy()
 	-- sort
 	sort(allItemStacks, compareItemStack)
 	
-	--[[
-	for i, itemStack in ipairs(allItemStacks) do
-		print(string.format("%d %s %d", i, itemStack.itemName, itemStack.count))
-	end
-	]]
 	
-	-- allSlots is the final expected result
+	for i, itemStack in ipairs(allItemStacks) do
+		print(string.format("%d %s(%d,%d) %d", i, itemStack.itemName, itemStack.itemClassID, itemStack.itemSubClassID, itemStack.quantity))
+	end
+	
+	
+	-- allSlots is the final expected result, with empty slots
 	local allSlots = {}
 	local index = 1
 	for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
