@@ -211,6 +211,7 @@ end
 
 ----------------------NEW CODE-------------------------
 
+-- smaller means item put before others
 local function itemPriority (a)
 	--hearthstone
 	if a.itemID == 6948 then return 0 end
@@ -238,8 +239,8 @@ local function itemPriority (a)
 	return 100
 end
 
+-- return true if a is before b (a<b)
 local function compareItemStack (a, b)
-	-- return true if a is before b (a<b)
 	if itemPriority(a) < itemPriority(b) then
 		return true
 	elseif itemPriority(a) > itemPriority(b) then
@@ -347,11 +348,12 @@ local function sortBagsEasy(bank)
 			-- is ok
 		else
 			-- need fix, find src
-			for j, srcSlot in ipairs(allSlots) do
+			for j = #allSlots, 1, -1 do
+				local srcSlot = allSlots[j]
 				if srcSlot.fixed then
-					-- fixed
+					-- src fixed
 				else
-					-- not fixed
+					-- src not fixed
 					local _, srcItemCount, _, _, _, _, _, _, _, srcItemID = GetContainerItemInfo(srcSlot.container, srcSlot.slot)
 					if srcItemID == dstSlot.itemID then
 						-- is what we need, move
