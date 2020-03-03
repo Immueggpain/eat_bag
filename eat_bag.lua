@@ -384,6 +384,46 @@ local function sortBagsEasy(bank)
 	print('======end sort=====')
 end
 
+local function listBag()
+	print('======begin list=====')
+	
+	local character_containers = {0, 1, 2, 3, 4}
+	
+	--get all items into a dict
+	local allItems = {}
+	for _, container in ipairs(character_containers) do
+		local slots = GetContainerNumSlots(container)
+		--if no container, slots is 0
+		for slot = 1, slots do
+			local item_id = GetContainerItemID(container, slot)
+			if item_id ~= nil then
+				local texture, count, locked, quality, readable, lootable, link, isFiltered = GetContainerItemInfo(container, slot)
+				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(item_id)
+				local bagType = GetItemFamily(item_id)
+				local perItem = allItems[item_id]
+				if perItem == nil then
+					perItem = {}
+					perItem.quantity = 0
+					allItems[item_id] = perItem
+				end
+				perItem.itemID = item_id
+				perItem.itemName = itemName
+				perItem.itemClassID = itemClassID
+				perItem.itemSubClassID = itemSubClassID
+				perItem.itemMaxStack = itemStackCount
+				perItem.itemBagType = bagType
+				perItem.quantity = perItem.quantity + count
+			end
+		end
+	end
+	
+	for _, perItem in pairs(allItems) do
+		print(string.format("%s %d", perItem.itemName, perItem.quantity))
+	end
+		
+	print('======end list=====')
+end
+
 local sortBagsCO
 
 local function sortBagsStart()
@@ -429,3 +469,6 @@ SLASH_eat_bag_sortbank1 = '/sk'
 
 SlashCmdList['eat_bag_sortboth'] = sortBothStart
 SLASH_eat_bag_sortboth1 = '/so'
+
+SlashCmdList['eat_bag_listbag'] = listBag
+SLASH_eat_bag_listbag1 = '/ls'
