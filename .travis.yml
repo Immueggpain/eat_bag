@@ -21,5 +21,6 @@ deploy:
     provider: script
     script: python3 githubrelease.py "eat_bag-$TRAVIS_TAG.zip"
     cleanup: false
+    skip_cleanup: true
     on:
         tags: true
