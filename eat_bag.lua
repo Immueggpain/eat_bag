@@ -348,7 +348,7 @@ local function sortBagsEasy(bank)
 			-- is ok
 		else
 			-- need fix, find src
-			for j = #allSlots, 1, -1 do
+			for j = 1, #allSlots, 1 do
 				local srcSlot = allSlots[j]
 				if srcSlot.fixed then
 					-- src fixed
