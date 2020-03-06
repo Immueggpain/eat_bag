@@ -259,6 +259,16 @@ local function sortBagsEasy(bank)
 	local containers
 	if bank then containers = bank_containers else containers = character_containers end
 	
+	-- exclude special bags
+	for i = #containers, 2, -1 do
+		local container = containers[i]
+		local bagItemID = GetInventoryItemID("player", ContainerIDToInventoryID(container))
+		local bagName = GetItemInfo(bagItemID)
+		local bagType = GetItemFamily(bagItemID)
+		--print(string.format("%s %d", bagName, bagType))
+		if bagType~=0 then table.remove(containers, i) end
+	end
+	
 	--get all items into a dict
 	local allItems = {}
 	for _, container in ipairs(containers) do
