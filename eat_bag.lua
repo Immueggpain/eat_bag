@@ -69,6 +69,8 @@ end
 
 -- smaller means item put before others
 local function itemPriority (a)
+	-- mage foods
+	if a.itemID == 8079 or a.itemID == 8076 then return 200 end
 	--hearthstone
 	if a.itemID == 6948 then return 0 end
 	--杂项
@@ -285,8 +287,10 @@ local function listBag()
 		end
 	end
 	
-	for _, perItem in pairs(allItems) do
-		print(string.format("%s %d", perItem.itemName, perItem.quantity))
+	--sort(allItems, compareItemStack)
+	
+	for _, a in pairs(allItems) do
+		print(string.format("%s %d %s", a.itemName, a.quantity, a.itemClassID))
 	end
 		
 	print('======end list=====')
