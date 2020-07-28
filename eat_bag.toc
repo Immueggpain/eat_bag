@@ -1,6 +1,6 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: 整理背包
-## Version: 1.0.4
+## Version: 1.0.5
 ## Author: 睡吧狗命要紧
 ## Notes: Sort your bags and bank. https://github.com/Immueggpain/eat_bag
 ## Notes-zhCN: 整理背包哟，诶嘿嘿 @睡吧狗命要紧 https://github.com/Immueggpain/eat_bag
