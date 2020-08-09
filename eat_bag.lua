@@ -69,8 +69,11 @@ end
 
 -- smaller means item put before others
 local function itemPriority (a)
-	-- mage gem
+	-- mage gems
 	if a.itemID == 8008 then return 201 end
+	if a.itemID == 8007 then return 202 end
+	if a.itemID == 5513 then return 203 end
+	if a.itemID == 5514 then return 204 end
 	-- mage foods
 	if a.itemID == 8079 or a.itemID == 8076 then return 200 end
 	--hearthstone
