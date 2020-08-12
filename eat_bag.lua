@@ -320,7 +320,6 @@ local function onUpdate()
 		local canResume, errMsg = coroutine.resume(sortBagsCO)
 		if canResume == false then
 			sortBagsCO = nil
-			print(errMsg)
 		end
 	end
 end
@@ -328,7 +327,6 @@ end
 --CreateFrame("FRAME", "eat_bag_frame", UIParent, "ContainerFrameTemplate")
 --create a frame for receiving events
 CreateFrame("FRAME", "eat_bag_event_frame");
-eat_bag_event_frame:RegisterEvent("MERCHANT_SHOW");
 --cas_frame:RegisterEvent("BAG_UPDATE");
 --cas_frame:RegisterEvent("BAG_UPDATE_DELAYED");
 --cas_frame:RegisterEvent("ITEM_PUSH");
