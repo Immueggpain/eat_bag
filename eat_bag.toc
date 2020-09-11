@@ -1,9 +1,9 @@
 ## Interface: 11305
 ## Title: 整理背包
-## Version: 1.0.6
-## Author: 睡吧狗命要紧
-## Notes: Sort your bags and bank. https://github.com/Immueggpain/eat_bag
-## Notes-zhCN: 整理背包哟，诶嘿嘿 @睡吧狗命要紧 https://github.com/Immueggpain/eat_bag
+## Version: 1.13.5.1
+## Author: 睡吧狗命要紧 (CN-比格沃斯) <黑暗契约>
+## Notes: 诶嘿嘿，能自动整理包包和银行哟~ by 睡吧狗命要紧 (CN-比格沃斯) <黑暗契约> (https://github.com/Immueggpain/eat_bag)
 ## X-Website: https://github.com/Immueggpain/eat_bag
 ## SavedVariables: 
+## SavedVariablesPerCharacter: 
 eat_bag.lua

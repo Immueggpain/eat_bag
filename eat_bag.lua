@@ -115,7 +115,7 @@ local function compareItemStack (a, b)
 end
 
 local function sortBagsEasy(bank)
-	print('======begin sort=====')
+	--print('======begin sort=====')
 	
 	local bank_containers = {-1, 5, 6, 7, 8, 9, 10}
 	local character_containers = {0, 1, 2, 3, 4}
@@ -256,7 +256,7 @@ local function sortBagsEasy(bank)
 		end
 	end
 	
-	print('======end sort=====')
+	--print('======end sort=====')
 end
 
 local function listBag()
@@ -304,15 +304,15 @@ end
 local sortBagsCO
 
 local function sortBagsStart()
-	sortBagsCO = coroutine.create(function () sortBagsEasy(false) end)
+	sortBagsCO = coroutine.create(function () sortBagsEasy(false) print('整理完成!') end)
 end
 
 local function sortBanksStart()
-	sortBagsCO = coroutine.create(function () sortBagsEasy(true) end)
+	sortBagsCO = coroutine.create(function () sortBagsEasy(true) print('整理完成!') end)
 end
 
 local function sortBothStart()
-	sortBagsCO = coroutine.create(function () sortBagsEasy(false) sortBagsEasy(true) end)
+	sortBagsCO = coroutine.create(function () sortBagsEasy(false) sortBagsEasy(true) print('整理完成!') end)
 end
 
 local function onUpdate()
