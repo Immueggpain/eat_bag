@@ -1,6 +1,6 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: 整理背包
-## Version: 1.13.5.1
+## Version: 1.13.6.0
 ## Author: 睡吧狗命要紧 (CN-比格沃斯) <黑暗契约>
 ## Notes: 诶嘿嘿，能自动整理包包和银行哟~ by 睡吧狗命要紧 (CN-比格沃斯) <黑暗契约> (https://github.com/Immueggpain/eat_bag)
 ## X-Website: https://github.com/Immueggpain/eat_bag
