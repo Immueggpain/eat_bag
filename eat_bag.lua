@@ -1,34 +1,69 @@
 -- smaller means item put before others
 local function itemPriority (a)
 	-- mage gems
-	if a.itemID == 8008 then return 201 end
-	if a.itemID == 8007 then return 202 end
-	if a.itemID == 5513 then return 203 end
-	if a.itemID == 5514 then return 204 end
+	if a.itemID == 8008 then return 2001 end
+	if a.itemID == 8007 then return 2002 end
+	if a.itemID == 5513 then return 2003 end
+	if a.itemID == 5514 then return 2004 end
 	-- mage foods
-	if a.itemID == 8079 or a.itemID == 8076 then return 200 end
+	if a.itemID == 8079 or a.itemID == 8076 then return 2000 end
 	--hearthstone
 	if a.itemID == 6948 then return 0 end
 	--杂项
-	if a.itemClassID == 15 then return 1 end
+	if a.itemClassID == 15 then return 100 end
 	--容器
-	if a.itemClassID == 1 then return 2 end
+	if a.itemClassID == 1 then return 200 end
+	--可装备
+	if a.itemEquipLoc then 
+		print(a.itemEquipLoc)
+		if a.itemEquipLoc == 'INVTYPE_HEAD' then
+		elseif a.itemEquipLoc == 'INVTYPE_NECK' then
+		elseif a.itemEquipLoc == 'INVTYPE_SHOULDER' then
+		elseif a.itemEquipLoc == 'INVTYPE_BODY' then
+		elseif a.itemEquipLoc == 'INVTYPE_CHEST' then
+		elseif a.itemEquipLoc == 'INVTYPE_WAIST' then
+		elseif a.itemEquipLoc == 'INVTYPE_LEGS' then
+		elseif a.itemEquipLoc == 'INVTYPE_FEET' then
+		elseif a.itemEquipLoc == 'INVTYPE_WRIST' then
+		elseif a.itemEquipLoc == 'INVTYPE_HAND' then
+		elseif a.itemEquipLoc == 'INVTYPE_FINGER' then
+		elseif a.itemEquipLoc == 'INVTYPE_TRINKET' then
+		elseif a.itemEquipLoc == 'INVTYPE_WEAPON' then
+		elseif a.itemEquipLoc == 'INVTYPE_SHIELD' then
+		elseif a.itemEquipLoc == 'INVTYPE_RANGED' then
+		elseif a.itemEquipLoc == 'INVTYPE_CLOAK' then
+		elseif a.itemEquipLoc == 'INVTYPE_2HWEAPON' then
+		elseif a.itemEquipLoc == 'INVTYPE_BAG' then
+		elseif a.itemEquipLoc == 'INVTYPE_TABARD' then
+		elseif a.itemEquipLoc == 'INVTYPE_ROBE' then
+		elseif a.itemEquipLoc == 'INVTYPE_WEAPONMAINHAND' then
+		elseif a.itemEquipLoc == 'INVTYPE_WEAPONOFFHAND' then
+		elseif a.itemEquipLoc == 'INVTYPE_HOLDABLE' then
+		elseif a.itemEquipLoc == 'INVTYPE_AMMO' then
+		elseif a.itemEquipLoc == 'INVTYPE_THROWN' then
+		elseif a.itemEquipLoc == 'INVTYPE_RANGEDRIGHT' then
+		elseif a.itemEquipLoc == 'INVTYPE_QUIVER' then
+		elseif a.itemEquipLoc == 'INVTYPE_RELIC' then
+		end
+		return 300 + string.byte(a.itemEquipLoc) 
+	end
 	--武器
-	if a.itemClassID == 2 then return 3 end
+	if a.itemClassID == 2 then return 99999 end
 	--护甲
-	if a.itemClassID == 4 then return 4 end
+	if a.itemClassID == 4 then return 99999 end
 	--配方
-	if a.itemClassID == 9 then return 5 end
+	if a.itemClassID == 9 then return 500 end
 	--施法材料
-	if a.itemClassID == 5 then return 6 end
+	if a.itemClassID == 5 then return 600 end
 	--商品（商业技能）
-	if a.itemClassID == 7 then return 7 end
+	if a.itemClassID == 7 then return 700 end
 	--消耗品
-	if a.itemClassID == 0 then return 8 end
+	if a.itemClassID == 0 then return 800 end
 	--钥匙
-	if a.itemClassID == 13 then return 9 end
+	if a.itemClassID == 13 then return 900 end
 	--任务
-	if a.itemClassID == 12 then return 10 end
+	if a.itemClassID == 12 then return 1000 end
+	
 	
 	return 100
 end
@@ -88,6 +123,7 @@ local function sortBagsEasy(bank)
 				perItem.itemSubClassID = itemSubClassID
 				perItem.itemMaxStack = itemStackCount
 				perItem.itemBagType = bagType
+				perItem.itemEquipLoc = itemEquipLoc
 				perItem.quantity = perItem.quantity + count
 			end
 		end
@@ -110,6 +146,7 @@ local function sortBagsEasy(bank)
 			itemStack.itemSubClassID = perItem.itemSubClassID
 			itemStack.itemMaxStack = perItem.itemMaxStack
 			itemStack.itemBagType = perItem.itemBagType
+			itemStack.itemEquipLoc = perItem.itemEquipLoc
 			itemStack.count = min(perItem.quantity-j+1, perItem.itemMaxStack)
 			tinsert(allItemStacks, itemStack)
 		end
@@ -251,6 +288,7 @@ local function onUpdate()
 		local canResume, errMsg = coroutine.resume(sortBagsCO)
 		if canResume == false then
 			sortBagsCO = nil
+			print(errMsg)
 		end
 	end
 end
