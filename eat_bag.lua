@@ -13,40 +13,66 @@ local function itemPriority (a)
 	if a.itemClassID == 15 then return 100 end
 	--容器
 	if a.itemClassID == 1 then return 200 end
+	
 	--可装备
-	if a.itemEquipLoc then 
-		print(a.itemEquipLoc)
-		if a.itemEquipLoc == 'INVTYPE_HEAD' then
-		elseif a.itemEquipLoc == 'INVTYPE_NECK' then
-		elseif a.itemEquipLoc == 'INVTYPE_SHOULDER' then
-		elseif a.itemEquipLoc == 'INVTYPE_BODY' then
-		elseif a.itemEquipLoc == 'INVTYPE_CHEST' then
-		elseif a.itemEquipLoc == 'INVTYPE_WAIST' then
-		elseif a.itemEquipLoc == 'INVTYPE_LEGS' then
-		elseif a.itemEquipLoc == 'INVTYPE_FEET' then
-		elseif a.itemEquipLoc == 'INVTYPE_WRIST' then
-		elseif a.itemEquipLoc == 'INVTYPE_HAND' then
-		elseif a.itemEquipLoc == 'INVTYPE_FINGER' then
-		elseif a.itemEquipLoc == 'INVTYPE_TRINKET' then
-		elseif a.itemEquipLoc == 'INVTYPE_WEAPON' then
-		elseif a.itemEquipLoc == 'INVTYPE_SHIELD' then
-		elseif a.itemEquipLoc == 'INVTYPE_RANGED' then
-		elseif a.itemEquipLoc == 'INVTYPE_CLOAK' then
-		elseif a.itemEquipLoc == 'INVTYPE_2HWEAPON' then
-		elseif a.itemEquipLoc == 'INVTYPE_BAG' then
-		elseif a.itemEquipLoc == 'INVTYPE_TABARD' then
-		elseif a.itemEquipLoc == 'INVTYPE_ROBE' then
-		elseif a.itemEquipLoc == 'INVTYPE_WEAPONMAINHAND' then
-		elseif a.itemEquipLoc == 'INVTYPE_WEAPONOFFHAND' then
-		elseif a.itemEquipLoc == 'INVTYPE_HOLDABLE' then
-		elseif a.itemEquipLoc == 'INVTYPE_AMMO' then
-		elseif a.itemEquipLoc == 'INVTYPE_THROWN' then
-		elseif a.itemEquipLoc == 'INVTYPE_RANGEDRIGHT' then
-		elseif a.itemEquipLoc == 'INVTYPE_QUIVER' then
-		elseif a.itemEquipLoc == 'INVTYPE_RELIC' then
-		end
-		return 300 + string.byte(a.itemEquipLoc) 
+	if a.itemEquipLoc == 'INVTYPE_HEAD' then
+		return 300+1
+	elseif a.itemEquipLoc == 'INVTYPE_NECK' then
+		return 300+2
+	elseif a.itemEquipLoc == 'INVTYPE_SHOULDER' then
+		return 300+3
+	elseif a.itemEquipLoc == 'INVTYPE_BODY' then
+		return 300+4
+	elseif a.itemEquipLoc == 'INVTYPE_CHEST' then
+		return 300+5
+	elseif a.itemEquipLoc == 'INVTYPE_WAIST' then
+		return 300+6
+	elseif a.itemEquipLoc == 'INVTYPE_LEGS' then
+		return 300+7
+	elseif a.itemEquipLoc == 'INVTYPE_FEET' then
+		return 300+8
+	elseif a.itemEquipLoc == 'INVTYPE_WRIST' then
+		return 300+9
+	elseif a.itemEquipLoc == 'INVTYPE_HAND' then
+		return 300+10
+	elseif a.itemEquipLoc == 'INVTYPE_FINGER' then
+		return 300+11
+	elseif a.itemEquipLoc == 'INVTYPE_TRINKET' then
+		return 300+12
+	elseif a.itemEquipLoc == 'INVTYPE_WEAPON' then
+		return 300+13
+	elseif a.itemEquipLoc == 'INVTYPE_SHIELD' then
+		return 300+14
+	elseif a.itemEquipLoc == 'INVTYPE_RANGED' then
+		return 300+15
+	elseif a.itemEquipLoc == 'INVTYPE_CLOAK' then
+		return 300+16
+	elseif a.itemEquipLoc == 'INVTYPE_2HWEAPON' then
+		return 300+17
+	elseif a.itemEquipLoc == 'INVTYPE_BAG' then
+		return 300+18
+	elseif a.itemEquipLoc == 'INVTYPE_TABARD' then
+		return 300+19
+	elseif a.itemEquipLoc == 'INVTYPE_ROBE' then
+		return 300+20
+	elseif a.itemEquipLoc == 'INVTYPE_WEAPONMAINHAND' then
+		return 300+21
+	elseif a.itemEquipLoc == 'INVTYPE_WEAPONOFFHAND' then
+		return 300+22
+	elseif a.itemEquipLoc == 'INVTYPE_HOLDABLE' then
+		return 300+23
+	elseif a.itemEquipLoc == 'INVTYPE_AMMO' then
+		return 300+24
+	elseif a.itemEquipLoc == 'INVTYPE_THROWN' then
+		return 300+25
+	elseif a.itemEquipLoc == 'INVTYPE_RANGEDRIGHT' then
+		return 300+26
+	elseif a.itemEquipLoc == 'INVTYPE_QUIVER' then
+		return 300+27
+	elseif a.itemEquipLoc == 'INVTYPE_RELIC' then
+		return 300+28
 	end
+	
 	--武器
 	if a.itemClassID == 2 then return 99999 end
 	--护甲
