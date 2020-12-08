@@ -9,70 +9,71 @@ local function itemPriority (a)
 	if a.itemID == 8079 or a.itemID == 8076 then return 2000 end
 	--hearthstone
 	if a.itemID == 6948 then return 0 end
-	--杂项
-	if a.itemClassID == 15 then return 100 end
-	--容器
-	if a.itemClassID == 1 then return 200 end
 	
 	--可装备
+	local equippableBase = 100
 	if a.itemEquipLoc == 'INVTYPE_HEAD' then
-		return 300+1
+		return equippableBase+1
 	elseif a.itemEquipLoc == 'INVTYPE_NECK' then
-		return 300+2
+		return equippableBase+2
 	elseif a.itemEquipLoc == 'INVTYPE_SHOULDER' then
-		return 300+3
+		return equippableBase+3
 	elseif a.itemEquipLoc == 'INVTYPE_BODY' then
-		return 300+4
+		return equippableBase+4
 	elseif a.itemEquipLoc == 'INVTYPE_CHEST' then
-		return 300+5
+		return equippableBase+5
 	elseif a.itemEquipLoc == 'INVTYPE_WAIST' then
-		return 300+6
+		return equippableBase+6
 	elseif a.itemEquipLoc == 'INVTYPE_LEGS' then
-		return 300+7
+		return equippableBase+7
 	elseif a.itemEquipLoc == 'INVTYPE_FEET' then
-		return 300+8
+		return equippableBase+8
 	elseif a.itemEquipLoc == 'INVTYPE_WRIST' then
-		return 300+9
+		return equippableBase+9
 	elseif a.itemEquipLoc == 'INVTYPE_HAND' then
-		return 300+10
+		return equippableBase+10
 	elseif a.itemEquipLoc == 'INVTYPE_FINGER' then
-		return 300+11
+		return equippableBase+11
 	elseif a.itemEquipLoc == 'INVTYPE_TRINKET' then
-		return 300+12
+		return equippableBase+12
 	elseif a.itemEquipLoc == 'INVTYPE_WEAPON' then
-		return 300+13
+		return equippableBase+13
 	elseif a.itemEquipLoc == 'INVTYPE_SHIELD' then
-		return 300+14
+		return equippableBase+14
 	elseif a.itemEquipLoc == 'INVTYPE_RANGED' then
-		return 300+15
+		return equippableBase+15
 	elseif a.itemEquipLoc == 'INVTYPE_CLOAK' then
-		return 300+16
+		return equippableBase+16
 	elseif a.itemEquipLoc == 'INVTYPE_2HWEAPON' then
-		return 300+17
+		return equippableBase+17
 	elseif a.itemEquipLoc == 'INVTYPE_BAG' then
-		return 300+18
+		return equippableBase+18
 	elseif a.itemEquipLoc == 'INVTYPE_TABARD' then
-		return 300+19
+		return equippableBase+19
 	elseif a.itemEquipLoc == 'INVTYPE_ROBE' then
-		return 300+20
+		return equippableBase+20
 	elseif a.itemEquipLoc == 'INVTYPE_WEAPONMAINHAND' then
-		return 300+21
+		return equippableBase+21
 	elseif a.itemEquipLoc == 'INVTYPE_WEAPONOFFHAND' then
-		return 300+22
+		return equippableBase+22
 	elseif a.itemEquipLoc == 'INVTYPE_HOLDABLE' then
-		return 300+23
+		return equippableBase+23
 	elseif a.itemEquipLoc == 'INVTYPE_AMMO' then
-		return 300+24
+		return equippableBase+24
 	elseif a.itemEquipLoc == 'INVTYPE_THROWN' then
-		return 300+25
+		return equippableBase+25
 	elseif a.itemEquipLoc == 'INVTYPE_RANGEDRIGHT' then
-		return 300+26
+		return equippableBase+26
 	elseif a.itemEquipLoc == 'INVTYPE_QUIVER' then
-		return 300+27
+		return equippableBase+27
 	elseif a.itemEquipLoc == 'INVTYPE_RELIC' then
-		return 300+28
+		return equippableBase+28
 	end
 	
+	--杂项
+	if a.itemClassID == 15 then return 200 end
+	--容器
+	if a.itemClassID == 1 then return 300 end
 	--武器
 	if a.itemClassID == 2 then return 99999 end
 	--护甲
