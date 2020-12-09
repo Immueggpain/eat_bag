@@ -18,79 +18,81 @@ local function itemPriority (a)
 		return equippableBase+2
 	elseif a.itemEquipLoc == 'INVTYPE_SHOULDER' then
 		return equippableBase+3
-	elseif a.itemEquipLoc == 'INVTYPE_BODY' then
+	elseif a.itemEquipLoc == 'INVTYPE_CLOAK' then
 		return equippableBase+4
 	elseif a.itemEquipLoc == 'INVTYPE_CHEST' then
 		return equippableBase+5
-	elseif a.itemEquipLoc == 'INVTYPE_WAIST' then
-		return equippableBase+6
-	elseif a.itemEquipLoc == 'INVTYPE_LEGS' then
-		return equippableBase+7
-	elseif a.itemEquipLoc == 'INVTYPE_FEET' then
-		return equippableBase+8
-	elseif a.itemEquipLoc == 'INVTYPE_WRIST' then
-		return equippableBase+9
-	elseif a.itemEquipLoc == 'INVTYPE_HAND' then
-		return equippableBase+10
-	elseif a.itemEquipLoc == 'INVTYPE_FINGER' then
-		return equippableBase+11
-	elseif a.itemEquipLoc == 'INVTYPE_TRINKET' then
-		return equippableBase+12
-	elseif a.itemEquipLoc == 'INVTYPE_WEAPON' then
-		return equippableBase+13
-	elseif a.itemEquipLoc == 'INVTYPE_SHIELD' then
-		return equippableBase+14
-	elseif a.itemEquipLoc == 'INVTYPE_RANGED' then
-		return equippableBase+15
-	elseif a.itemEquipLoc == 'INVTYPE_CLOAK' then
-		return equippableBase+16
-	elseif a.itemEquipLoc == 'INVTYPE_2HWEAPON' then
-		return equippableBase+17
-	elseif a.itemEquipLoc == 'INVTYPE_BAG' then
-		return equippableBase+18
-	elseif a.itemEquipLoc == 'INVTYPE_TABARD' then
-		return equippableBase+19
 	elseif a.itemEquipLoc == 'INVTYPE_ROBE' then
-		return equippableBase+20
-	elseif a.itemEquipLoc == 'INVTYPE_WEAPONMAINHAND' then
-		return equippableBase+21
-	elseif a.itemEquipLoc == 'INVTYPE_WEAPONOFFHAND' then
-		return equippableBase+22
-	elseif a.itemEquipLoc == 'INVTYPE_HOLDABLE' then
-		return equippableBase+23
-	elseif a.itemEquipLoc == 'INVTYPE_AMMO' then
-		return equippableBase+24
-	elseif a.itemEquipLoc == 'INVTYPE_THROWN' then
-		return equippableBase+25
+		return equippableBase+5
+	elseif a.itemEquipLoc == 'INVTYPE_BODY' then
+		return equippableBase+6
+	elseif a.itemEquipLoc == 'INVTYPE_TABARD' then
+		return equippableBase+7
+	elseif a.itemEquipLoc == 'INVTYPE_WRIST' then
+		return equippableBase+8
+	elseif a.itemEquipLoc == 'INVTYPE_HAND' then
+		return equippableBase+9
+	elseif a.itemEquipLoc == 'INVTYPE_WAIST' then
+		return equippableBase+10
+	elseif a.itemEquipLoc == 'INVTYPE_LEGS' then
+		return equippableBase+11
+	elseif a.itemEquipLoc == 'INVTYPE_FEET' then
+		return equippableBase+12
+	elseif a.itemEquipLoc == 'INVTYPE_FINGER' then
+		return equippableBase+13
+	elseif a.itemEquipLoc == 'INVTYPE_TRINKET' then
+		return equippableBase+14
+	elseif a.itemEquipLoc == 'INVTYPE_2HWEAPON' then
+		return equippableBase+15
+	elseif a.itemEquipLoc == 'INVTYPE_WEAPON' then
+		return equippableBase+16
+	elseif a.itemEquipLoc == 'INVTYPE_SHIELD' then
+		return equippableBase+17
+	elseif a.itemEquipLoc == 'INVTYPE_RANGED' then
+		return equippableBase+18
 	elseif a.itemEquipLoc == 'INVTYPE_RANGEDRIGHT' then
-		return equippableBase+26
+		return equippableBase+19
+		
+	elseif a.itemEquipLoc == 'INVTYPE_BAG' then
+		return equippableBase+30
+	elseif a.itemEquipLoc == 'INVTYPE_WEAPONMAINHAND' then
+		return equippableBase+30
+	elseif a.itemEquipLoc == 'INVTYPE_WEAPONOFFHAND' then
+		return equippableBase+30
+	elseif a.itemEquipLoc == 'INVTYPE_HOLDABLE' then
+		return equippableBase+30
+	elseif a.itemEquipLoc == 'INVTYPE_AMMO' then
+		return equippableBase+30
+	elseif a.itemEquipLoc == 'INVTYPE_THROWN' then
+		return equippableBase+30
 	elseif a.itemEquipLoc == 'INVTYPE_QUIVER' then
-		return equippableBase+27
+		return equippableBase+30
 	elseif a.itemEquipLoc == 'INVTYPE_RELIC' then
-		return equippableBase+28
+		return equippableBase+30
 	end
 	
+	--消耗品
+	if a.itemClassID == 0 then return 200 end
+	
 	--杂项
-	if a.itemClassID == 15 then return 200 end
+	if a.itemClassID == 15 then return 300 end
 	--容器
-	if a.itemClassID == 1 then return 300 end
-	--武器
-	if a.itemClassID == 2 then return 99999 end
-	--护甲
-	if a.itemClassID == 4 then return 99999 end
+	if a.itemClassID == 1 then return 400 end
 	--配方
 	if a.itemClassID == 9 then return 500 end
 	--施法材料
 	if a.itemClassID == 5 then return 600 end
 	--商品（商业技能）
 	if a.itemClassID == 7 then return 700 end
-	--消耗品
-	if a.itemClassID == 0 then return 800 end
 	--钥匙
-	if a.itemClassID == 13 then return 900 end
+	if a.itemClassID == 13 then return 800 end
 	--任务
-	if a.itemClassID == 12 then return 1000 end
+	if a.itemClassID == 12 then return 900 end
 	
+	--武器
+	if a.itemClassID == 2 then return 99999 end
+	--护甲
+	if a.itemClassID == 4 then return 99999 end
 	
 	return 100
 end
@@ -278,10 +280,12 @@ local function listBag()
 				end
 				perItem.itemID = item_id
 				perItem.itemName = itemName
+				perItem.itemLink = itemLink
 				perItem.itemClassID = itemClassID
 				perItem.itemSubClassID = itemSubClassID
 				perItem.itemMaxStack = itemStackCount
 				perItem.itemBagType = bagType
+				perItem.itemEquipLoc = itemEquipLoc
 				perItem.quantity = perItem.quantity + count
 			end
 		end
@@ -290,7 +294,7 @@ local function listBag()
 	--sort(allItems, compareItemStack)
 	
 	for _, a in pairs(allItems) do
-		print(string.format("%s n:%d class:%s id:%d", a.itemName, a.quantity, a.itemClassID, a.itemID))
+		print(string.format("%s n:%d class:%s subclz:%s id:%d eloc:%s", a.itemLink, a.quantity, a.itemClassID, a.itemSubClassID, a.itemEquipLoc, a.itemEquipLoc))
 	end
 		
 	print('======end list=====')
